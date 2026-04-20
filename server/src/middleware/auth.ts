@@ -1,6 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
+if (!process.env.JWT_SECRET && process.env.NODE_ENV === 'production') {
+  console.warn('WARNING: JWT_SECRET not set in production!');
+}
+
 export const JWT_SECRET = process.env.JWT_SECRET || 'dev_secret_key_123';
 
 export interface AuthRequest extends Request {

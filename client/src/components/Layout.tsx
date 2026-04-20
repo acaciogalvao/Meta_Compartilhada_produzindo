@@ -17,6 +17,7 @@ const Layout: React.FC = () => {
         <nav className="fixed bottom-0 w-full max-w-md bg-white border-t border-gray-200 flex justify-around items-center h-16 z-10">
           <NavLink
             to="/"
+            end
             className={({ isActive }) =>
               `flex flex-col items-center justify-center w-full h-full transition-all duration-200 ${
                 isActive ? 'text-indigo-600' : 'text-gray-400 hover:text-indigo-500'

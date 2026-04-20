@@ -20,14 +20,16 @@ const Profile: React.FC = () => {
   const { logout } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const response = await apiClient.get('/users/me');
         setProfile(response.data);
-      } catch (error) {
-        console.error('Error fetching profile', error);
+      } catch (err) {
+        console.error('Error fetching profile', err);
+        setError('Não foi possível carregar o perfil');
       } finally {
         setLoading(false);
       }
@@ -36,8 +38,22 @@ const Profile: React.FC = () => {
     fetchProfile();
   }, []);
 
-  if (loading || !profile) {
-    return <div className="flex justify-center items-center h-full">Carregando...</div>;
+  if (loading) {
+    return <div className="flex justify-center items-center h-full p-6 text-gray-500">Carregando...</div>;
+  }
+
+  if (error || !profile) {
+    return (
+      <div className="text-center p-6 pb-6">
+        <p className="text-red-600 mb-4">{error || 'Erro ao carregar perfil'}</p>
+        <button
+          onClick={logout}
+          className="w-full bg-red-50 text-red-600 py-4 rounded-2xl font-bold flex items-center justify-center hover:bg-red-100 transition-colors shadow-sm"
+        >
+          <LogOut size={20} className="mr-2" /> Sair
+        </button>
+      </div>
+    );
   }
 
   return (

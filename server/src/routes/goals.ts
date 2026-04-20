@@ -48,6 +48,16 @@ router.post('/', (req: AuthRequest, res: Response) => {
   }
 
   try {
+    if (type === 'dupla') {
+      if (partner_id === userId) {
+        return res.status(400).json({ error: 'Você não pode convidar a si mesmo' });
+      }
+      const partner = db.prepare('SELECT id FROM users WHERE id = ?').get(partner_id);
+      if (!partner) {
+        return res.status(400).json({ error: 'Parceiro inválido' });
+      }
+    }
+
     const partnerStatus = type === 'dupla' ? 'pending' : null;
     const pId = type === 'dupla' ? partner_id : null;
 
@@ -76,7 +86,7 @@ router.get('/:id', (req: AuthRequest, res: Response) => {
       FROM goals g
       JOIN users u1 ON g.created_by = u1.id
       LEFT JOIN users u2 ON g.partner_id = u2.id
-      WHERE g.id = ? AND (g.created_by = ? OR g.partner_id = ?)
+      WHERE g.id = ? AND (g.created_by = ? OR (g.partner_id = ? AND g.partner_status IN ('accepted','pending')))
     `).get(goalId, userId, userId) as any;
 
     if (!goal) {

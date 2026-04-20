@@ -72,7 +72,9 @@ const NewGoal: React.FC = () => {
     <div className="pb-6">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-800">Nova Meta</h2>
-        <p className="text-gray-500 text-sm">Passo {step} de {type === 'dupla' ? 4 : 3}</p>
+        <p className="text-gray-500 text-sm">
+          Passo {type === 'individual' && step === 4 ? 3 : step} de {type === 'dupla' ? 4 : 3}
+        </p>
       </div>
 
       {step === 1 && (
